@@ -38,8 +38,9 @@ jobs:
         uses: actions/github-script@v4
         with:
           script: |
-            const repo = await github.repos.get(context.repo)
-            return repo.data
+            const repo = await github.repos.get(context.repo);
+            console.log(context.repo);
+            return repo.data;
       - 
         name: Set up QEMU
         id: qemu
