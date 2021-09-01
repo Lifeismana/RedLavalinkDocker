@@ -13,7 +13,7 @@ RUN apt-get -qq update && \
     apt-get -qq -y dist-upgrade && \
     mkdir -p /usr/share/man/man1 && \
     apt-get -qq -y --no-install-recommends install zulu13-jdk=13.0.8-* && \
-    apt-get -qq -y purge gnupg software-properties-common curl && \
+    apt-get -qq -y purge gnupg software-properties-common && \
     apt -y autoremove && \
     rm -rf /var/lib/apt/lists/* zulu-repo_${ZULU_REPO_VER}_all.deb
 
@@ -24,21 +24,19 @@ LABEL maintainer="Lifeismana"
 
 EXPOSE 2333
 
-RUN apt-get update && apt-get install curl -y
+WORKDIR /Lavalink/
 
-COPY application.yml /lavalink/application.yml
+COPY application.yml application.yml
 
-COPY start.sh /lavalink/start.sh
+COPY start.sh start.sh
 
-COPY Lavalink.jar /lavalink/Lavalink.jar
+COPY Lavalink.jar Lavalink.jar
 
-RUN chmod +x /lavalink/start.sh
+RUN chmod +x start.sh
 
 RUN groupadd -g 322 lavalink && useradd -r -u 322 -g lavalink lavalink
 
 USER lavalink
-
-WORKDIR /lavalink/
 
 CMD ["/bin/sh", "start.sh"]
 
