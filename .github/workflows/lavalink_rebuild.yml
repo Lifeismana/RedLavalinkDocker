@@ -45,7 +45,7 @@ jobs:
             build_release=true
             build_prerelease=true
 
-            if(context.eventName != 'workflow_dispatch'){
+            if(context.eventName == 'workflow_dispatch'){
               build_release=context.event.inputs.version_to_rebuild == 'Both' || context.event.inputs.version_to_rebuild == 'Pre-Release'|| context.event.inputs.version_to_rebuild == 'PreRelease'
               build_prerelease=context.event.inputs.version_to_rebuild == 'Both' || context.event.inputs.version_to_rebuild == 'Release'
             }
@@ -105,6 +105,6 @@ jobs:
         uses: ././docker-build/.github
         with:
           tag: ${{ fromJson(steps.tags.outputs.result).release_tag }}
-          prerelease: ${{ fromJson(steps.tags.outputs.result).prerelease_tag != fromJson(steps.tags.outputs.result).release_tag }}
+          prerelease: ${{ fromJson(steps.tags.outputs.result).prerelease_tag == fromJson(steps.tags.outputs.result).release_tag }}
           release: true
           repodata: ${{ steps.repo.outputs.result }}
