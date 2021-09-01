@@ -19,7 +19,7 @@ jobs:
       packages: write
     env:
       TITLE: Red-Lavalink
-      GHCR_SLUG: ghcr.io/Lifeismana/RedLavalinkDocker
+      GHCR_SLUG: ghcr.io/lifeismana/redlavalinkdocker
     steps:
       - name: Find Jar Tag
         uses: actions/github-script@v4
