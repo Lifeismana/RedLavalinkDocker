@@ -39,7 +39,7 @@ jobs:
         with:
           script: |
             const repo = await github.repos.get(context.repo);
-            console.log(context.repo);
+            console.debug(repo.data);
             return repo.data;
       - 
         name: Set up QEMU
