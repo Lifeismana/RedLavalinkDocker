@@ -25,12 +25,14 @@ jobs:
       packages: write
     env:
       TITLE: Red-Lavalink
+      # *  This needs to be changed when changing repo ↓
       GHCR_SLUG: ghcr.io/lifeismana/redlavalinkdocker
     steps:
       - name: Find Jar Tag
         id: tags
         uses: actions/github-script@v4
         with:
+          # *  This needs to be changed when changing repo ↓
           script: |
             const repoinfo = { owner:"Lifeismana", repo:"RedLavalinkDocker",}
             const {data: release} =  await github.repos.listReleases(repoinfo); 

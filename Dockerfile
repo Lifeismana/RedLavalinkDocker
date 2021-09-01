@@ -20,6 +20,7 @@ RUN apt-get -qq update && \
 ENV JAVA_HOME=/usr/lib/jvm/zulu13-ca-amd64
 
 #Thanks Draper
+# * ↓ This needs to be changed when changing repo 
 LABEL maintainer="Lifeismana"
 
 EXPOSE 2333

@@ -21,6 +21,7 @@ runs:
       name: Download Jar
       uses: Legion2/download-release-action@v2.1.0
       with:
+        # *  This needs to be changed when changing repo ↓
         repository: Lifeismana/RedLavalinkDocker  #Cog-Creators/Lavalink-Jars
         tag: ${{inputs.tag}}
         path: docker-build
