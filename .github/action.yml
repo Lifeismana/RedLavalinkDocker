@@ -22,3 +22,59 @@ runs:
         tag: ${{inputs.tag}}
         path: ${{env.GITHUB_WORKSPACE}}
         file: Lavalink.jar
+    - 
+      name: Prepare
+      shell: bash
+      id: prepare
+      run: |
+        TAG_RELEASE=""
+        if ${{ inputs.release }}; then
+          TAG_RELEASE="${{ env.GHCR_SLUG }}:lastest"
+        fi
+
+        TAG_PRERELEASE=""
+        if ${{ inputs.prerelease }}; then
+          TAG_PRERELEASE="${{ env.GHCR_SLUG }}:nightly"
+        fi
+
+        echo ::set-output name=tag_release::${TAG_RELEASE}
+        echo ::set-output name=tag_prerelease::${TAG_PRERELEASE}
+        echo ::set-output name=build_date:: $(date -u +'%Y-%m-%dT%H:%M:%SZ')
+    -
+      name: Build and push 
+      uses: docker/build-push-action@v2
+      with:
+        target: ${{ inputs.tag }}
+        platforms: ${{ steps.buildx.outputs.platforms }}
+        push: ${{ github.event_name != 'pull_request' }}
+        tags: |
+          ${{ env.GHCR_SLUG }}:${{inputs.tag}}
+          ${{ steps.prepare.outputs.tag_release }}
+          ${{ steps.prepare.outputs.tag_prerelease }}
+        cache-from: |
+          ${{ env.GHCR_SLUG }}:${{inputs.tag}}
+        labels: |
+          maintainer=${{ github.repository_owner }}
+          org.opencontainers.image.vendor=${{ github.repository_owner }}
+          org.opencontainers.image.title=${{ env.TITLE }}
+          org.opencontainers.image.description=${{ fromJson(steps.repo.outputs.result).description }}
+          org.opencontainers.image.source=${{ fromJson(steps.repo.outputs.result).html_url }}
+          org.opencontainers.image.version=${{inputs.tag}}
+          org.opencontainers.image.revision=${{ github.sha }}
+          org.opencontainers.image.licenses=${{ fromJson(steps.repo.outputs.result).license.spdx_id }}
+          org.opencontainers.image.build-date=${{ steps.prepare.outputs.build_date }}
+    -
+      name: Check manifest
+      shell: bash
+      run: |
+        if [ ${{github.event_name != 'pull_request'}} ]; then
+          docker buildx imagetools inspect ${{ env.GHCR_SLUG }}:${{inputs.tag}}
+        fi
+    -
+      name: Check pull
+      shell: bash
+      run: |
+        if [ ${{github.event_name != 'pull_request'}} ]; then
+          docker pull ${{ env.GHCR_SLUG }}:${{inputs.tag}}
+          docker image inspect ${{ env.GHCR_SLUG }}:${{inputs.tag}}
+        fi
