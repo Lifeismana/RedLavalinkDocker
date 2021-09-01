@@ -20,7 +20,7 @@ runs:
       with:
         repository: Lifeismana/RedLavalinkDocker  #Cog-Creators/Lavalink-Jars
         tag: ${{inputs.tag}}
-        path: ${{GITHUB_WORKSPACE}}
+        path: ${{env.GITHUB_WORKSPACE}}
         file: Lavalink.jar
     - 
       name: Prepare
@@ -65,12 +65,12 @@ runs:
           org.opencontainers.image.build-date=${{ steps.prepare.outputs.build_date }}
     -
       name: Check manifest
-      if: github.event_name != 'pull_request'
+      if: ${{github.event_name != 'pull_request'}}
       run: |
         docker buildx imagetools inspect ${{ env.GHCR_SLUG }}:${{inputs.tag}}
     -
       name: Check pull
-      if: github.event_name != 'pull_request'
+      if: ${{github.event_name != 'pull_request'}}
       run: |
         docker pull ${{ env.GHCR_SLUG }}:${{inputs.tag}}
         docker image inspect ${{ env.GHCR_SLUG }}:${{inputs.tag}}
