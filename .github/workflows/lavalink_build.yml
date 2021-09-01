@@ -31,7 +31,7 @@ jobs:
         name: Checkout
         uses: actions/checkout@v2
         with:
-          path: ${{env.GITHUB_WORKSPACE}}/docker-build
+          path: docker-build
       -
         name: Repo metadata
         id: repo
