@@ -22,16 +22,18 @@ jobs:
       GHCR_SLUG: ghcr.io/Lifeismana/RedLavalinkDocker
     steps:
       - name: Find Jar Tag
-        #is there a pre-release in front of the release
         uses: actions/github-script@v4
         with:
           script: |
             const repoinfo = { owner:"Lifeismana", repo:"RedLavalinkDocker",}
             const release =  await octokit.rest.repos.listReleases(repoinfo); 
-            const sortedRelease = release.sort((a,b)=>a.tag_name < b.tag_name);
-            release_tag = (await octokit.rest.repos.getLatestRelease(repoinfo)).tag_name
-            prerelease_tag = sortedRelease[0]?.prerelease ? sortedRelease[0]b.tag_name : release_tag
-
+            // if a smaller than b, b will be in front of a, we want higher release first
+            const sortedRelease = release.sort((Release_a,Release_b)=>Release_a.tag_name < Release_b.tag_name);
+            const sortedPreRelease = sortedRelease.filter((Release)=> Release.prerelease);
+            
+            const release_tag = (await octokit.rest.repos.getLatestRelease(repoinfo)).tag_name;
+            const prerelease_tag = sortedPreRelease[0] && sortedPreRelease[0].tag_name > release_tag ? sortedPreRelease[0].tag_name : release_tag;
+            
             return {
             release_tag:release_tag,
             prerelease_tag:prerelease_tag
