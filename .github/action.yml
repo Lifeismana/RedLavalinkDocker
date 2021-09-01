@@ -27,7 +27,7 @@ runs:
         path: docker-build/docker
         file: Lavalink.jar
     - 
-      name: Prepare
+      name: Prepare tags
       shell: bash
       id: prepare
       run: |

@@ -18,7 +18,8 @@ on:
 
 
 jobs:
-  buildx:
+  docker-rebuild:
+    if: github.event_name == 'workflow_dispatch' || github.event_name == 'schedule' || github.event_name == 'push' || github.event_name == 'pull_request'
     runs-on: ubuntu-latest
     permissions:
       packages: write
