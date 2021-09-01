@@ -7,7 +7,7 @@ on:
       - published
 
 jobs:
-  buildx:
+  docker:
     runs-on: ubuntu-latest
     permissions:
       packages: write
