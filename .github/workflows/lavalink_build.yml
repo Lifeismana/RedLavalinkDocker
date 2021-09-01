@@ -62,7 +62,7 @@ jobs:
           username: ${{ github.repository_owner }}
           password: ${{ secrets.GITHUB_TOKEN }}
       - 
-        uses: ././.github
+        uses: ././docker-build/.github
         with:
           tag: ${{ github.event.release.tag_name }}
           prerelease: ${{ ! steps.pre_release_in_front_of_release.outputs.result || github.event.release.prerelease}}
