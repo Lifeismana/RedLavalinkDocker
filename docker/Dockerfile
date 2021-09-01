@@ -1,4 +1,5 @@
 FROM ubuntu:bionic
+#Thanks Draper
 
 ENV LANG='en_US.UTF-8' LANGUAGE='en_US:en' LC_ALL='en_US.UTF-8'
 
@@ -19,7 +20,7 @@ RUN apt-get -qq update && \
 
 ENV JAVA_HOME=/usr/lib/jvm/zulu13-ca-amd64
 
-#Thanks Draper
+
 # * ↓ This needs to be changed when changing repo 
 LABEL maintainer="Lifeismana"
 

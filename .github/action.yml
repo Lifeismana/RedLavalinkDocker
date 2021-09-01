@@ -1,5 +1,6 @@
 name: "Get Jar, Build And Publish"
 description: "Get lavalink's jar, build the docker image of it and publish it to github"
+# Thanks PhasecoreX 
 
 inputs:
   tag:
