@@ -106,7 +106,7 @@ jobs:
       - 
         # we won't rebuild a prerelease on a workflow_dispatch, don't think it's a problem
         name: Rebuild pre-release
-        if: fromJson(steps.tags.outputs.result).prerelease_tag != fromJson(steps.tags.outputs.result).release_tag && steps.build_info.outputs.result.build_prerelease
+        if: fromJson(steps.tags.outputs.result).prerelease_tag != fromJson(steps.tags.outputs.result).release_tag && fromJson(steps.tags.outputs.result).build_prerelease
         uses: ././docker-build/.github
         with:
           tag: ${{ fromJson(steps.tags.outputs.result).prerelease_tag }}
@@ -115,7 +115,7 @@ jobs:
           repodata: ${{ steps.repo.outputs.result }}
       - 
         name: Rebuild release 
-        if: 'true' #steps.build_info.outputs.result.build_release
+        if: fromJson(steps.tags.outputs.result).build_release
         uses: ././docker-build/.github
         with:
           tag: ${{ fromJson(steps.tags.outputs.result).release_tag }}
