@@ -46,8 +46,8 @@ jobs:
             build_prerelease=true
 
             if(context.eventName == 'workflow_dispatch'){
-              build_release=context.payload.inputs.version_to_rebuild == 'Both' || context.payload.inputs.version_to_rebuild == 'Pre-Release'|| context.payload.inputs.version_to_rebuild == 'PreRelease'
-              build_prerelease=context.payload.inputs.version_to_rebuild == 'Both' || context.payload.inputs.version_to_rebuild == 'Release'
+              build_release=context.payload.inputs.version_to_rebuild == 'Both' || context.payload.inputs.version_to_rebuild == 'Release'
+              build_prerelease=context.payload.inputs.version_to_rebuild == 'Both' || context.payload.inputs.version_to_rebuild == 'Pre-Release'|| context.payload.inputs.version_to_rebuild == 'PreRelease'
             }
 
             return {
