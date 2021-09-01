@@ -58,6 +58,7 @@ runs:
           org.opencontainers.image.vendor=${{ github.repository_owner }}
           org.opencontainers.image.title=${{ env.TITLE }}
           org.opencontainers.image.build-date=${{ steps.prepare.outputs.build_date }}
+          org.opencontainers.image.revision=${{ github.sha }}
     -
       name: Check manifest
       shell: bash
