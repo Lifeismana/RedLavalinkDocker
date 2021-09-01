@@ -35,11 +35,22 @@ jobs:
             const release_tag = release_data.tag_name
             const prerelease_tag = sortedPreRelease[0] && sortedPreRelease[0].tag_name > release_tag ? sortedPreRelease[0].tag_name : release_tag;
             
-            console.debug(release_tag);
-            console.debug(prerelease_tag);
+            console.debug(context.payload)
+
+            build_release=true
+            build_prerelease=true
+            if(context.eventName != 'workflow_dispatch'){
+            build_release=context.event.inputs.version_to_rebuild == 'Both' || context.event.inputs.version_to_rebuild == 'Pre-Release'|| context.event.inputs.version_to_rebuild == 'PreRelease'
+            build_prerelease=context.event.inputs.version_to_rebuild == 'Both' || context.event.inputs.version_to_rebuild == 'Release'
+            
+            }
+
+
             return {
             release_tag:release_tag,
-            prerelease_tag:prerelease_tag
+            prerelease_tag:prerelease_tag,
+            build_release:build_release,
+            build_prerelease:build_prerelease,
             }
         id: tags
 
@@ -95,10 +106,10 @@ jobs:
       - 
         # we won't rebuild a prerelease on a workflow_dispatch, don't think it's a problem
         name: Rebuild pre-release
-        if: steps.tags.outputs.result.prerelease_tag != steps.tags.outputs.result.release_tag && steps.build_info.outputs.result.build_prerelease
+        if: fromJson(steps.tags.outputs.result).prerelease_tag != fromJson(steps.tags.outputs.result).release_tag && steps.build_info.outputs.result.build_prerelease
         uses: ././docker-build/.github
         with:
-          tag: steps.tags.outputs.result.prerelease_tag
+          tag: fromJson(steps.tags.outputs.result).prerelease_tag
           prerelease: true
           release: false
           repodata: ${{ steps.repo.outputs.result }}
@@ -107,7 +118,7 @@ jobs:
         if: 'true' #steps.build_info.outputs.result.build_release
         uses: ././docker-build/.github
         with:
-          tag: steps.tags.outputs.result.release_tag
-          prerelease: ${{ steps.tags.outputs.result.prerelease_tag != steps.tags.outputs.result.release_tag }}
+          tag: fromJson(steps.tags.outputs.result).release_tag
+          prerelease: ${{ fromJson(steps.tags.outputs.result).prerelease_tag != fromJson(steps.tags.outputs.result).release_tag }}
           release: true
           repodata: ${{ steps.repo.outputs.result }}
