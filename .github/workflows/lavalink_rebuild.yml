@@ -89,22 +89,6 @@ jobs:
           username: ${{ github.repository_owner }}
           password: ${{ secrets.GITHUB_TOKEN }}
       - 
-        name: Prepare
-        shell: bash
-        id: build_info
-        run: | 
-          BUILD_PRERELEASE=true
-          BUILD_RELEASE=true
-
-          if [ ${{github.event_name != 'workflow_dispatch'}} ]; then
-            BUILD_RELEASE= ${{github.event.inputs.version_to_rebuild == 'Both' || github.event.inputs.version_to_rebuild == 'Pre-Release'|| github.event.inputs.version_to_rebuild == 'PreRelease'}}
-            BUILD_PRERELEASE= ${{github.event.inputs.version_to_rebuild == 'Both' || github.event.inputs.version_to_rebuild == 'Release'}}
-          fi
-
-          echo ::set-output name=build_release::${BUILD_RELEASE}
-          echo ::set-output name=build_prerelease::${BUILD_PRERELEASE}
-      - 
-        # we won't rebuild a prerelease on a workflow_dispatch, don't think it's a problem
         name: Rebuild pre-release
         if: fromJson(steps.tags.outputs.result).prerelease_tag != fromJson(steps.tags.outputs.result).release_tag && fromJson(steps.tags.outputs.result).build_prerelease
         uses: ././docker-build/.github
