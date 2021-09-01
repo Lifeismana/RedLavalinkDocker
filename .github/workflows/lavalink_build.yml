@@ -60,9 +60,8 @@ jobs:
           username: ${{ github.repository_owner }}
           password: ${{ secrets.GITHUB_TOKEN }}
       - 
-        uses: ././.github/build
+        uses: ././.github
         with:
           tag: ${{ github.event.release.tag_name }}
           prerelease: ${{ ! steps.pre_release_in_front_of_release.outputs.result || github.event.release.prerelease}}
-          #no need to check if it's a draft bc published event isn't sent on draft
           release: ${{ ! github.event.release.prerelease}}

@@ -24,6 +24,7 @@ runs:
         file: Lavalink.jar
     - 
       name: Prepare
+      shell: bash
       id: prepare
       run: |
         TAG_RELEASE=""
@@ -65,12 +66,16 @@ runs:
           org.opencontainers.image.build-date=${{ steps.prepare.outputs.build_date }}
     -
       name: Check manifest
-      if: ${{github.event_name != 'pull_request'}}
+      shell: bash
       run: |
-        docker buildx imagetools inspect ${{ env.GHCR_SLUG }}:${{inputs.tag}}
+        if [ ${{github.event_name != 'pull_request'}} ]
+          docker buildx imagetools inspect ${{ env.GHCR_SLUG }}:${{inputs.tag}}
+        fi
     -
       name: Check pull
-      if: ${{github.event_name != 'pull_request'}}
+      shell: bash
       run: |
-        docker pull ${{ env.GHCR_SLUG }}:${{inputs.tag}}
-        docker image inspect ${{ env.GHCR_SLUG }}:${{inputs.tag}}
+        if [ ${{github.event_name != 'pull_request'}} ]
+          docker pull ${{ env.GHCR_SLUG }}:${{inputs.tag}}
+          docker image inspect ${{ env.GHCR_SLUG }}:${{inputs.tag}}
+        fi
