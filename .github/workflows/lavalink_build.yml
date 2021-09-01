@@ -13,7 +13,7 @@ jobs:
       packages: write
     env:
       TITLE: Red-Lavalink
-      GHCR_SLUG: ghcr.io/Lifeismana/RedLavalinkDocker
+      GHCR_SLUG: ghcr.io/lifeismana/redlavalinkdocker
     steps:
       - name: Is last release a pre-release
         #is there a pre-release in front of the release
