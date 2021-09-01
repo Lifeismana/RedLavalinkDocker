@@ -34,7 +34,7 @@ runs:
 
         TAG_RELEASE=""
         if ${{ inputs.release }}; then
-          TAG_RELEASE="${{ env.GHCR_SLUG }}:lastest"
+          TAG_RELEASE="${{ env.GHCR_SLUG }}:latest"
         fi
 
         echo ::set-output name=tag_release::${TAG_RELEASE}
