@@ -26,12 +26,13 @@ jobs:
         with:
           script: |
             const repoinfo = { owner:"Lifeismana", repo:"RedLavalinkDocker",}
-            const release =  await github.repos.listReleases(repoinfo); 
+            const {data: release} =  await github.repos.listReleases(repoinfo); 
             // if a smaller than b, b will be in front of a, we want higher release first
-            const sortedRelease = Object.values(release).sort((Release_a,Release_b)=>Release_a.tag_name < Release_b.tag_name);
+            const sortedRelease = release.sort((Release_a,Release_b)=>Release_a.tag_name < Release_b.tag_name);
             const sortedPreRelease = sortedRelease.filter((Release)=> Release.prerelease);
             
-            const release_tag = (await github.repos.getLatestRelease(repoinfo)).tag_name;
+            const {data: release_data} = (await github.repos.getLatestRelease(repoinfo));
+            const release_tag = release_data.tag_name
             const prerelease_tag = sortedPreRelease[0] && sortedPreRelease[0].tag_name > release_tag ? sortedPreRelease[0].tag_name : release_tag;
             
             return {
