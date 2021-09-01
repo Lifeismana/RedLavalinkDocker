@@ -49,8 +49,8 @@ runs:
         push: ${{ github.event_name != 'pull_request' }}
         tags: |
           ${{ env.GHCR_SLUG }}:${{inputs.tag}}
+          ${{ steps.prepare.outputs.tag_prerelease }} 
           ${{ steps.prepare.outputs.tag_release }}
-          ${{ steps.prepare.outputs.tag_prerelease }}          
         cache-from: |
           ${{ env.GHCR_SLUG }}:${{inputs.tag}}
         labels: |
