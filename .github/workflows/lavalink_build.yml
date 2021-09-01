@@ -1,0 +1,68 @@
+name: build_red_lavalink
+
+on:
+  release:
+    # run on release and pre-release
+    types: 
+      - published
+
+jobs:
+  buildx:
+    runs-on: ubuntu-latest
+    permissions:
+      packages: write
+    env:
+      TITLE: Red-Lavalink
+      GHCR_SLUG: ghcr.io/Lifeismana/RedLavalinkDocker
+    steps:
+      - name: Is last release a pre-release
+        #is there a pre-release in front of the release
+        uses: actions/github-script@v4
+        with:
+          # "Cog-Creators", "Lavalink-Jars"
+          script: |
+            let release =  await octokit.rest.repos.listReleases({
+              "Lifeismana", "RedLavalinkDocker",}); 
+            const sortedRelease = release.sort((a,b)=>a.tag_name < b.tag_name);
+            return sortedRelease[0].prerelease;
+        id: pre_release_in_front_of_release
+
+      - 
+        name: Checkout
+        uses: actions/checkout@v2
+      -
+        name: Repo metadata
+        id: repo
+        uses: actions/github-script@v4
+        with:
+          script: |
+            const repo = await github.repos.get(context.repo)
+            return repo.data
+      - 
+        name: Set up QEMU
+        id: qemu
+        uses: docker/setup-qemu-action@v1
+        with:
+          image: tonistiigi/binfmt:latest
+          platforms: all
+      - 
+        name: Set up Docker Buildx
+        id: buildx
+        uses: docker/setup-buildx-action@v1
+        with:
+          version: latest
+      - 
+        name: Login to GitHub Container Registry
+        if: github.event_name != 'pull_request'
+        uses: docker/login-action@v1 
+        with:
+          registry: ghcr.io
+          username: ${{ github.repository_owner }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+      - 
+        uses: ./build
+        with:
+          tag: ${{ github.event.release.tag_name }}
+          prerelease: ${{ ! steps.pre_release_in_front_of_release.outputs.result || github.event.release.prerelease}}
+          #no need to check if it's a draft bc published event isn't sent on draft
+          release: ${{ ! github.event.release.prerelease}}
