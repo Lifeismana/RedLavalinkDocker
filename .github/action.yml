@@ -20,7 +20,7 @@ runs:
       with:
         repository: Lifeismana/RedLavalinkDocker  #Cog-Creators/Lavalink-Jars
         tag: ${{inputs.tag}}
-        path: ${{env.GITHUB_WORKSPACE}}/docker-build
+        path: docker-build
         file: Lavalink.jar
     - 
       name: Prepare
