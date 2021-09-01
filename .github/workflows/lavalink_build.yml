@@ -23,8 +23,7 @@ jobs:
           script: |
             const release =  await github.repos.listReleases({
               owner:"Lifeismana", repo:"RedLavalinkDocker",}); 
-            console.log(release.constructor);
-            const sortedRelease = release.sort((a,b)=>a.tag_name < b.tag_name);
+            const sortedRelease = Object.values(release).sort((a,b)=>a.tag_name < b.tag_name);
             return sortedRelease[0].prerelease;
         id: pre_release_in_front_of_release
 
