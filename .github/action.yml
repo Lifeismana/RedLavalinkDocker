@@ -53,6 +53,7 @@ runs:
           ${{ steps.prepare.outputs.tag_prerelease }}          
         cache-from: |
           ${{ env.GHCR_SLUG }}:${{inputs.tag}}
+        labels: maintainer=${{ github.repository_owner }}
     -
       name: Check manifest
       shell: bash
