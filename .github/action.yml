@@ -25,12 +25,6 @@ runs:
         tag: ${{inputs.tag}}
         path: docker-build
         file: Lavalink.jar
-    - name: random test
-      #is there a pre-release in front of the release
-      uses: actions/github-script@v4
-      with:
-        # "Cog-Creators", "Lavalink-Jars"
-        script:  console.log("${{inputs.repodata}}")
     - 
       name: Prepare
       shell: bash
