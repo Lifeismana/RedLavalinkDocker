@@ -67,3 +67,4 @@ jobs:
           tag: ${{ github.event.release.tag_name }}
           prerelease: ${{ ! steps.pre_release_in_front_of_release.outputs.result || github.event.release.prerelease}}
           release: ${{ ! github.event.release.prerelease}}
+          repodata: ${{ steps.repo.outputs.result }}
