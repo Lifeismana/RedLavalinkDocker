@@ -101,7 +101,7 @@ jobs:
           repodata: ${{ steps.repo.outputs.result }}
       - 
         name: Rebuild release 
-        if: steps.build_info.outputs.result.build_release
+        if: 'true' #steps.build_info.outputs.result.build_release
         uses: ././docker-build/.github
         with:
           tag: steps.tags.outputs.result.release_tag
