@@ -81,8 +81,8 @@ jobs:
           BUILD_RELEASE=true
 
           if [ ${{github.event_name != 'workflow_dispatch'}} ]; then
-            BUILD_RELEASE= ${{github.event.inputs.version_to_rebuild == "Both" || github.event.inputs.version_to_rebuild == "Pre-Release"|| github.event.inputs.version_to_rebuild == "PreRelease"}}
-            BUILD_PRERELEASE= ${{github.event.inputs.version_to_rebuild == "Both" || github.event.inputs.version_to_rebuild == "Release"}}
+            BUILD_RELEASE= ${{github.event.inputs.version_to_rebuild == 'Both' || github.event.inputs.version_to_rebuild == 'Pre-Release'|| github.event.inputs.version_to_rebuild == 'PreRelease'}}
+            BUILD_PRERELEASE= ${{github.event.inputs.version_to_rebuild == 'Both' || github.event.inputs.version_to_rebuild == 'Release'}}
           fi
 
           echo ::set-output name=build_release::${BUILD_RELEASE}
