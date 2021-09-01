@@ -42,7 +42,7 @@ runs:
 
         echo ::set-output name=tag_release::${TAG_RELEASE}
         echo ::set-output name=tag_prerelease::${TAG_PRERELEASE}
-        echo ::set-output name=build_date:: $(date -u +'%Y-%m-%dT%H:%M:%SZ')
+        echo ::set-output name=build_date::$(date -u +'%Y-%m-%dT%H:%M:%SZ')
     -
       name: Build and push 
       uses: docker/build-push-action@v2
