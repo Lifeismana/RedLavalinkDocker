@@ -35,6 +35,8 @@ jobs:
             const release_tag = release_data.tag_name
             const prerelease_tag = sortedPreRelease[0] && sortedPreRelease[0].tag_name > release_tag ? sortedPreRelease[0].tag_name : release_tag;
             
+            console.debug(release_tag);
+            console.debug(prerelease_tag);
             return {
             release_tag:release_tag,
             prerelease_tag:prerelease_tag
