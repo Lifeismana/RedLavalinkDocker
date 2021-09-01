@@ -28,7 +28,7 @@ jobs:
           script: |
             const repoinfo = { owner:"Lifeismana", repo:"RedLavalinkDocker",}
             const release =  await octokit.rest.repos.listReleases(repoinfo); 
-            const sortedRelease = release.sort((a,b)=>a.tag_name < b. tag_name);
+            const sortedRelease = release.sort((a,b)=>a.tag_name < b.tag_name);
             release_tag = (await octokit.rest.repos.getLatestRelease(repoinfo)).tag_name
             prerelease_tag = sortedRelease[0]?.prerelease ? sortedRelease[0]b.tag_name : release_tag
 
