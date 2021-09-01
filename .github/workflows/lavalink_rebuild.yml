@@ -109,7 +109,7 @@ jobs:
         if: fromJson(steps.tags.outputs.result).prerelease_tag != fromJson(steps.tags.outputs.result).release_tag && steps.build_info.outputs.result.build_prerelease
         uses: ././docker-build/.github
         with:
-          tag: fromJson(steps.tags.outputs.result).prerelease_tag
+          tag: ${{ fromJson(steps.tags.outputs.result).prerelease_tag }}
           prerelease: true
           release: false
           repodata: ${{ steps.repo.outputs.result }}
@@ -118,7 +118,7 @@ jobs:
         if: 'true' #steps.build_info.outputs.result.build_release
         uses: ././docker-build/.github
         with:
-          tag: fromJson(steps.tags.outputs.result).release_tag
+          tag: ${{ fromJson(steps.tags.outputs.result).release_tag }}
           prerelease: ${{ fromJson(steps.tags.outputs.result).prerelease_tag != fromJson(steps.tags.outputs.result).release_tag }}
           release: true
           repodata: ${{ steps.repo.outputs.result }}
