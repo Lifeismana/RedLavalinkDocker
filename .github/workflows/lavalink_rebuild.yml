@@ -3,13 +3,19 @@ name: rebuild_red_lavalink
 on:
   workflow_dispatch:
     inputs:
-      #! this is dumb let's reword that when i feel like it
+      #! this is a weird name let's reword that when i find something better
       version_to_rebuild:
           description: 'Image type: Release or Pre-Release or Both'
           required: true
           default: 'Both'
   schedule:
     - cron: '0 0 * * MON' # every monday at midnight
+  push:
+    branches:
+      - master
+  pull_request:
+    branches:
+      - master      
 
 
 jobs:
@@ -22,6 +28,7 @@ jobs:
       GHCR_SLUG: ghcr.io/lifeismana/redlavalinkdocker
     steps:
       - name: Find Jar Tag
+        id: tags
         uses: actions/github-script@v4
         with:
           script: |
@@ -34,26 +41,21 @@ jobs:
             const {data: release_data} = (await github.repos.getLatestRelease(repoinfo));
             const release_tag = release_data.tag_name
             const prerelease_tag = sortedPreRelease[0] && sortedPreRelease[0].tag_name > release_tag ? sortedPreRelease[0].tag_name : release_tag;
-            
-            console.debug(context.payload)
 
             build_release=true
             build_prerelease=true
-            if(context.eventName != 'workflow_dispatch'){
-            build_release=context.event.inputs.version_to_rebuild == 'Both' || context.event.inputs.version_to_rebuild == 'Pre-Release'|| context.event.inputs.version_to_rebuild == 'PreRelease'
-            build_prerelease=context.event.inputs.version_to_rebuild == 'Both' || context.event.inputs.version_to_rebuild == 'Release'
-            
-            }
 
+            if(context.eventName != 'workflow_dispatch'){
+              build_release=context.event.inputs.version_to_rebuild == 'Both' || context.event.inputs.version_to_rebuild == 'Pre-Release'|| context.event.inputs.version_to_rebuild == 'PreRelease'
+              build_prerelease=context.event.inputs.version_to_rebuild == 'Both' || context.event.inputs.version_to_rebuild == 'Release'
+            }
 
             return {
-            release_tag:release_tag,
-            prerelease_tag:prerelease_tag,
-            build_release:build_release,
-            build_prerelease:build_prerelease,
-            }
-        id: tags
-
+              release_tag:release_tag,
+              prerelease_tag:prerelease_tag,
+              build_release:build_release,
+              build_prerelease:build_prerelease,
+            }        
       - 
         name: Checkout
         uses: actions/checkout@v2
