@@ -1,4 +1,4 @@
-name: build_images
+name: rebuild_red_lavalink
 
 on:
   workflow_dispatch:
