@@ -1,4 +1,4 @@
-name: rebuild_red_lavalink
+name: build_red_lavalink_docker
 
 on:
   workflow_dispatch:
@@ -12,6 +12,8 @@ on:
   push:
     branches:
       - master
+    paths-ignore:
+      - README.md
   pull_request:
     branches:
       - master      
