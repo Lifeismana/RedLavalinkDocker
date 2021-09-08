@@ -1,6 +1,6 @@
 name: "Get Jar, Build And Publish"
 description: "Get lavalink's jar, build the docker image of it and publish it to github"
-# Thanks PhasecoreX 
+# Thanks PhasecoreX
 
 inputs:
   tag:
@@ -10,7 +10,7 @@ inputs:
     description: "is this a release (true/false)"
     required: true
   prerelease:
-    description: "is this a prerelease (true/false)" 
+    description: "is this a prerelease (true/false)"
     required: true
   repodata:
     description: "give it repo data"
@@ -18,17 +18,15 @@ inputs:
 runs:
   using: "composite"
   steps:
-    - 
-      name: Download Jar
+    - name: Download Jar
       uses: Legion2/download-release-action@v2.1.0
       with:
         # *  This needs to be changed when changing repo ↓
-        repository: Lifeismana/RedLavalinkDocker  #Cog-Creators/Lavalink-Jars
+        repository: Lifeismana/RedLavalinkDocker #Cog-Creators/Lavalink-Jars
         tag: ${{inputs.tag}}
         path: docker-build/docker
         file: Lavalink.jar
-    - 
-      name: Prepare tags
+    - name: Prepare tags
       shell: bash
       id: prepare
       run: |
@@ -45,8 +43,7 @@ runs:
         echo ::set-output name=tag_release::${TAG_RELEASE}
         echo ::set-output name=tag_prerelease::${TAG_PRERELEASE}
         echo ::set-output name=build_date::$(date -u +'%Y-%m-%dT%H:%M:%SZ')
-    -
-      name: Build and push 
+    - name: Build and push
       uses: docker/build-push-action@v2
       with:
         context: docker-build/docker
@@ -68,15 +65,13 @@ runs:
           org.opencontainers.image.description=${{ fromJson(inputs.repodata).description }}
           org.opencontainers.image.source=${{ fromJson(inputs.repodata).html_url }}
           org.opencontainers.image.licenses=${{ fromJson(inputs.repodata).license.spdx_id }}
-    -
-      name: Check manifest
+    - name: Check manifest
       shell: bash
       run: |
         if [ ${{github.event_name != 'pull_request'}} ]; then
           docker buildx imagetools inspect ${{ env.GHCR_SLUG }}:${{inputs.tag}}
         fi
-    -
-      name: Check pull
+    - name: Check pull
       shell: bash
       run: |
         if [ ${{github.event_name != 'pull_request'}} ]; then
