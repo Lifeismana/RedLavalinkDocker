@@ -1,7 +1,6 @@
-##### START OF ZULU OPENJDK DOCKERFILE
+##### using the slim vers to support arm 32
 
-FROM adoptopenjdk/openjdk13:jre
-
+FROM adoptopenjdk/openjdk13:slim
 ##### END OF ZULU OPENJDK DOCKERFILE
 
 # FROM azul/zulu-openjdk:13
