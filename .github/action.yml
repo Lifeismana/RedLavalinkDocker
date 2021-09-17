@@ -6,6 +6,9 @@ inputs:
   tag:
     description: "tag of the release to use"
     required: true
+  jar_url:
+    description: "url of the jar"
+    required: true
   release:
     description: "is this a release (true/false)"
     required: true
@@ -19,13 +22,9 @@ runs:
   using: "composite"
   steps:
     - name: Download Jar
-      uses: Legion2/download-release-action@v2.1.0
-      with:
-        # *  This needs to be changed when changing repo ↓
-        repository: Lifeismana/RedLavalinkDocker #Cog-Creators/Lavalink-Jars
-        tag: ${{inputs.tag}}
-        path: docker-build/docker
-        file: Lavalink.jar
+      shell: bash
+      run: |
+        curl -L ${{inputs.jar_url}} -o docker-build/docker/Lavalink.jar
     - name: Prepare tags
       shell: bash
       id: prepare

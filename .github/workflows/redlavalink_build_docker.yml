@@ -24,64 +24,6 @@ on:
 
 jobs:
   docker-build:
-    if: github.event_name == 'release'
-    runs-on: ubuntu-latest
-    permissions:
-      packages: write
-    env:
-      TITLE: Red-Lavalink
-      # * ↓ This needs to be changed when changing repo
-      GHCR_SLUG: ghcr.io/lifeismana/redlavalinkdocker
-    steps:
-      - name: Is last release a pre-release
-        id: pre_release_in_front_of_release
-        #is there a pre-release in front of the release
-        uses: actions/github-script@v4
-        with:
-          # "Cog-Creators", "Lavalink-Jars"
-          # *  This needs to be changed when changing repo ↓
-          script: |
-            const repoinfo = { owner:"Lifeismana", repo:"RedLavalinkDocker",}
-            const {data: release} =  await github.repos.listReleases(repoinfo); 
-            console.debug(context.payload)
-            const sortedRelease = release.sort((Release_a,Release_b)=>Release_a.tag_name < Release_b.tag_name);
-            return sortedRelease[0].prerelease;
-      - name: Checkout
-        uses: actions/checkout@v2
-        with:
-          path: docker-build
-      - name: Repo metadata
-        id: repo
-        uses: actions/github-script@v4
-        with:
-          script: |
-            const repo = await github.repos.get(context.repo);
-            return repo.data;
-      - name: Set up QEMU
-        id: qemu
-        uses: docker/setup-qemu-action@v1
-        with:
-          platforms: all
-      - name: Set up Docker Buildx
-        id: buildx
-        uses: docker/setup-buildx-action@v1
-        with:
-          version: latest
-      - name: Login to GitHub Container Registry
-        if: github.event_name != 'pull_request'
-        uses: docker/login-action@v1
-        with:
-          registry: ghcr.io
-          username: ${{ github.repository_owner }}
-          password: ${{ secrets.GITHUB_TOKEN }}
-      - uses: ././docker-build/.github
-        with:
-          tag: ${{ github.event.release.tag_name }}
-          prerelease: ${{ ! fromJson(steps.pre_release_in_front_of_release.outputs.result) || github.event.release.prerelease}}
-          release: ${{ ! github.event.release.prerelease}}
-          repodata: ${{ steps.repo.outputs.result }}
-  docker-rebuild:
-    if: github.event_name == 'workflow_dispatch' || github.event_name == 'schedule' || github.event_name == 'push' || github.event_name == 'pull_request'
     runs-on: ubuntu-latest
     permissions:
       packages: write
@@ -96,42 +38,42 @@ jobs:
         with:
           # *  This needs to be changed when changing repo ↓
           script: |
-              let release_tag, release_jar_url, prerelease_tag, prerelease_jar_url, build_release, build_prerelease;
-              build_release = build_prerelease = true;
+            let release_tag, release_jar_url, prerelease_tag, prerelease_jar_url, build_release, build_prerelease;
+            build_release = build_prerelease = true;
 
-              const repoinfo = { owner:"Lifeismana", repo:"RedLavalinkDocker",}
+            const repoinfo = { owner:"Lifeismana", repo:"RedLavalinkDocker",}
 
-              const {data: last_release} = (await github.repos.getLatestRelease(repoinfo));
-              release_tag = release_tag = last_release.tag_name;
-              release_jar_url = release_jar_url = last_release.assets.find((elem) => elem.name == 'Lavalink.jar').browser_download_url;
+            const {data: last_release} = (await github.repos.getLatestRelease(repoinfo));
+            release_tag = release_tag = last_release.tag_name;
+            release_jar_url = release_jar_url = last_release.assets.find((elem) => elem.name == 'Lavalink.jar').browser_download_url;
 
-              const {data: release_list} =  await github.repos.listReleases(repoinfo); 
-              // if a smaller than b, b will be in front of a, we want higher release first
-              const sorted_pre_release = release_list.filter((Release)=> Release.prerelease).sort((Release_a,Release_b)=>Release_a.tag_name < Release_b.tag_name);
-              if (sorted_pre_release[0] && sorted_pre_release[0].tag_name > release_tag) {
-              prerelease_tag = sorted_pre_release[0].tag_name;
-              prerelease_jar_url = sorted_pre_release[0].assets.find((elem) => elem.name == 'Lavalink.jar').browser_download_url;
-              }
+            const {data: release_list} =  await github.repos.listReleases(repoinfo); 
+            // if a smaller than b, b will be in front of a, we want higher release first
+            const sorted_pre_release = release_list.filter((Release)=> Release.prerelease).sort((Release_a,Release_b)=>Release_a.tag_name < Release_b.tag_name);
+            if (sorted_pre_release[0] && sorted_pre_release[0].tag_name > release_tag) {
+                prerelease_tag = sorted_pre_release[0].tag_name;
+                prerelease_jar_url = sorted_pre_release[0].assets.find((elem) => elem.name == 'Lavalink.jar').browser_download_url;
+            }
 
-              console.debug(context.payload)
-              if (context.eventName == 'release') {
-              build_release = !context.payload.event.release.prerelease;
-              build_prerelease = context.payload.event.release.prerelease;
-              }
+            // checking this is kinda dumb bc we don't check if that release is the last release or prerelease
+            if (context.eventName == 'release') {
+                build_release = !context.payload.release.prerelease;
+                build_prerelease = context.payload.release.prerelease;
+            }
 
-              if(context.eventName == 'workflow_dispatch'){
-              build_release = context.payload.inputs.release_to_rebuild == 'Both' || context.payload.inputs.release_to_rebuild == 'Release';
-              build_prerelease = context.payload.inputs.release_to_rebuild == 'Both' || context.payload.inputs.release_to_rebuild == 'Pre-Release' || context.payload.inputs.release_to_rebuild == 'PreRelease'
-              }
+            if(context.eventName == 'workflow_dispatch'){
+                build_release = context.payload.inputs.release_to_rebuild == 'Both' || context.payload.inputs.release_to_rebuild == 'Release';
+                build_prerelease = context.payload.inputs.release_to_rebuild == 'Both' || context.payload.inputs.release_to_rebuild == 'Pre-Release' || context.payload.inputs.release_to_rebuild == 'PreRelease'
+            }
 
-              return {
-              release_tag:release_tag,
-              prerelease_tag:prerelease_tag,
-              release_jar_url:release_jar_url,
-              prerelease_jar_url:prerelease_jar_url,
-              build_release:build_release,
-              build_prerelease:build_prerelease,
-              }
+            return {
+                release_tag:release_tag,
+                prerelease_tag:prerelease_tag,
+                release_jar_url:release_jar_url,
+                prerelease_jar_url:prerelease_jar_url,
+                build_release:build_release,
+                build_prerelease:build_prerelease,
+            }
       - name: Checkout
         uses: actions/checkout@v2
         with:
@@ -160,19 +102,21 @@ jobs:
           registry: ghcr.io
           username: ${{ github.repository_owner }}
           password: ${{ secrets.GITHUB_TOKEN }}
-      - name: Rebuild pre-release
+      - name: build pre-release
         if: fromJson(steps.tags.outputs.result).prerelease_tag != fromJson(steps.tags.outputs.result).release_tag && fromJson(steps.tags.outputs.result).build_prerelease
         uses: ././docker-build/.github
         with:
           tag: ${{ fromJson(steps.tags.outputs.result).prerelease_tag }}
+          jar_url: ${{ fromJson(steps.tags.outputs.result).prerelease_jar_url }}
           prerelease: true
           release: false
           repodata: ${{ steps.repo.outputs.result }}
-      - name: Rebuild release
+      - name: build release
         if: fromJson(steps.tags.outputs.result).build_release
         uses: ././docker-build/.github
         with:
           tag: ${{ fromJson(steps.tags.outputs.result).release_tag }}
+          jar_url: ${{ fromJson(steps.tags.outputs.result).release_jar_url }}
           prerelease: ${{ fromJson(steps.tags.outputs.result).prerelease_tag == fromJson(steps.tags.outputs.result).release_tag }}
           release: true
           repodata: ${{ steps.repo.outputs.result }}
