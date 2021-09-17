@@ -44,7 +44,7 @@ jobs:
             const repoinfo = { owner:"Lifeismana", repo:"RedLavalinkDocker",}
 
             const {data: last_release} = (await github.repos.getLatestRelease(repoinfo));
-            release_tag = release_tag = last_release.tag_name;
+            prerelease_tag = release_tag = last_release.tag_name;
             release_jar_url = release_jar_url = last_release.assets.find((elem) => elem.name == 'Lavalink.jar').browser_download_url;
 
             const {data: release_list} =  await github.repos.listReleases(repoinfo); 
