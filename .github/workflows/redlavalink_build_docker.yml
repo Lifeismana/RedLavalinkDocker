@@ -4,9 +4,13 @@ on:
   workflow_dispatch:
     inputs:
       release_to_rebuild:
-        description: "Image type: Release or Pre-Release or Both"
+        type: choice
+        description: "Image type"
         required: true
-        default: "Both"
+        options: 
+        - Release
+        - Pre-Release
+        - Both
   schedule:
     - cron: "0 0 * * MON" # every monday at midnight
   push:
