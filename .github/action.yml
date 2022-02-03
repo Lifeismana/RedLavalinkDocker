@@ -31,12 +31,12 @@ runs:
       run: |
         TAG_PRERELEASE=""
         if ${{ inputs.prerelease }}; then
-          TAG_PRERELEASE="${{ env.GHCR_SLUG }}:nightly"
+          TAG_PRERELEASE="azul-${{ env.GHCR_SLUG }}:nightly"
         fi
 
         TAG_RELEASE=""
         if ${{ inputs.release }}; then
-          TAG_RELEASE="${{ env.GHCR_SLUG }}:latest"
+          TAG_RELEASE="azul-${{ env.GHCR_SLUG }}:latest"
         fi
 
         echo ::set-output name=tag_release::${TAG_RELEASE}
@@ -49,11 +49,9 @@ runs:
         platforms: |
           linux/amd64
           linux/arm64
-          linux/arm/v7
-          linux/arm/v8
         push: ${{ github.event_name != 'pull_request' }}
         tags: |
-          ${{ env.GHCR_SLUG }}:${{inputs.tag}}
+          azul-${{ env.GHCR_SLUG }}:${{inputs.tag}}
           ${{ steps.prepare.outputs.tag_prerelease }} 
           ${{ steps.prepare.outputs.tag_release }}
         cache-from: |
