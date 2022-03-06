@@ -15,7 +15,7 @@ lavalink:
     bufferDurationMs: 400 # Length of track to buffer into memory in miliseconds.
     frameBufferDurationMs: 5000 # How many milliseconds of audio to keep buffered
     youtubePlaylistLoadLimit: 6 # Number of pages at 100 each
-    playerUpdateInterval: 5 # How frequently to send player updates to clients, in seconds
+    playerUpdateInterval: 1 # How frequently to send player updates to clients, in seconds
     youtubeSearchEnabled: true
     soundcloudSearchEnabled: true
     gc-warnings: true
