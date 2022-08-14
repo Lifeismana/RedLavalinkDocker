@@ -14,7 +14,7 @@ RUN    apt-get -qq update;
 RUN    apt-get -qq -y --no-install-recommends install gnupg software-properties-common locales curl gosu;
 RUN    locale-gen en_US.UTF-8;
 RUN    apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv-keys 0xB1998361219BD9C9;
-RUN    curl -sLO https://cdn.azul.com/zulu/bin/zulu-repo_${ZULU_REPO_VER}_all.deb && dpkg -i zulu-repo_${ZULU_REPO_VER}_all.deb;
+RUN    curl -sLO https://cdn.azul.com/zulu/bin/zulu-repo_${ZULU_REPO_VER}_all.deb && apt-get install ./zulu-repo_${ZULU_REPO_VER}_all.deb;
 RUN    apt-get -qq update;
 RUN    apt-get -qq -y dist-upgrade;
 RUN    mkdir -p /usr/share/man/man1;
