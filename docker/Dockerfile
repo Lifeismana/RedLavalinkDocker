@@ -1,6 +1,6 @@
 ##### using the slim vers to support arm 32
 
-FROM ubuntu:focal
+FROM ubuntu:jammy
 ARG ZULU_REPO_VER=1.0.0-3
 
 ENV DEBIAN_FRONTEND=noninteractive\
