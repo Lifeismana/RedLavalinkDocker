@@ -9,7 +9,7 @@ ENV DEBIAN_FRONTEND=noninteractive\
     LC_ALL=en_US.UTF-8\
     TZ=Europe/Paris
 
-RUN sudo rm -rf /var/lib/apt/lists/* && \
+RUN rm -rf /var/lib/apt/lists/* && \
     apt-get -qq update && \
     apt-get -qq -y --no-install-recommends install gnupg software-properties-common locales curl gosu && \
     locale-gen en_US.UTF-8 && \
