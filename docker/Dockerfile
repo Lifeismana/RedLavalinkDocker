@@ -12,7 +12,7 @@ ENV DEBIAN_FRONTEND=noninteractive\
 RUN apt-get -qq update && \
     apt-get -qq -y --no-install-recommends install gnupg software-properties-common locales curl gosu && \
     locale-gen en_US.UTF-8 && \
-    apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv-keys 0x219BD9C9 && \
+    apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv-keys 0xB1998361219BD9C9 && \
     curl -sLO https://cdn.azul.com/zulu/bin/zulu-repo_${ZULU_REPO_VER}_all.deb && dpkg -i zulu-repo_${ZULU_REPO_VER}_all.deb && \
     apt-get -qq update && \
     apt-get -qq -y dist-upgrade && \
