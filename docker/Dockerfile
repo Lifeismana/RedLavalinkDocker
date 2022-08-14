@@ -9,7 +9,8 @@ ENV DEBIAN_FRONTEND=noninteractive\
     LC_ALL=en_US.UTF-8\
     TZ=Europe/Paris
 
-RUN apt-get -qq update && \
+RUN sudo rm -rf /var/lib/apt/lists/* && \
+    apt-get -qq update && \
     apt-get -qq -y --no-install-recommends install gnupg software-properties-common locales curl gosu && \
     locale-gen en_US.UTF-8 && \
     apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv-keys 0xB1998361219BD9C9 && \
