@@ -9,20 +9,19 @@ ENV DEBIAN_FRONTEND=noninteractive\
     LC_ALL=en_US.UTF-8\
     TZ=Europe/Paris
 
-RUN    rm -rf /var/lib/apt/lists/*;
-RUN    apt-get -qq update;
-RUN    apt-get -qq -y --no-install-recommends install gnupg software-properties-common locales curl gosu;
-RUN    locale-gen en_US.UTF-8;
-RUN    apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv-keys 0xB1998361219BD9C9;
-RUN    curl -sLO https://cdn.azul.com/zulu/bin/zulu-repo_${ZULU_REPO_VER}_all.deb && apt-get install ./zulu-repo_${ZULU_REPO_VER}_all.deb;
-RUN    apt-get -qq update;
-RUN    apt-get -qq -y dist-upgrade;
-RUN    mkdir -p /usr/share/man/man1;
-RUN    apt-get -qq -y --no-install-recommends install zulu17-jdk;
-RUN    apt-get -qq -y purge gnupg software-properties-common curl;
-RUN    apt -y autoremove;
-RUN    rm -rf /var/lib/apt/lists/* zulu-repo_${ZULU_REPO_VER}_all.deb;
-RUN    dpkgArch="$(dpkg --print-architecture)";
+RUN apt-get -qq update && \
+    apt-get -qq -y --no-install-recommends install gnupg software-properties-common locales curl gosu && \
+    locale-gen en_US.UTF-8 && \
+    apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv-keys 0xB1998361219BD9C9 && \
+    curl -sLO https://cdn.azul.com/zulu/bin/zulu-repo_${ZULU_REPO_VER}_all.deb && apt-get install ./zulu-repo_${ZULU_REPO_VER}_all.deb && \
+    apt-get -qq update && \
+    apt-get -qq -y dist-upgrade && \
+    mkdir -p /usr/share/man/man1 && \
+    apt-get -qq -y --no-install-recommends install zulu17-jdk && \
+    apt-get -qq -y purge gnupg software-properties-common curl && \
+    apt -y autoremove && \
+    rm -rf /var/lib/apt/lists/* zulu-repo_${ZULU_REPO_VER}_all.deb \
+    dpkgArch="$(dpkg --print-architecture)";
 
 ENV JAVA_HOME=/usr/lib/jvm/zulu17-ca-${dpkgArch}
 #Thanks Draper
