@@ -47,11 +47,11 @@ jobs:
 
             const repoinfo = { owner:"Lifeismana", repo:"RedLavalinkDocker",}
 
-            const {data: last_release} = (await github.repos.getLatestRelease(repoinfo));
+            const {data: last_release} = (await github.rest.repos.getLatestRelease(repoinfo));
             prerelease_tag = release_tag = last_release.tag_name;
             release_jar_url = release_jar_url = last_release.assets.find((elem) => elem.name == 'Lavalink.jar').browser_download_url;
 
-            const {data: release_list} =  await github.repos.listReleases(repoinfo); 
+            const {data: release_list} =  await github.rest.repos.listReleases(repoinfo); 
             // if a smaller than b, b will be in front of a, we want higher release first
             const sorted_pre_release = release_list.filter((Release)=> Release.prerelease).sort((Release_a,Release_b)=>Release_a.tag_name < Release_b.tag_name);
             if (sorted_pre_release[0] && sorted_pre_release[0].tag_name > release_tag) {
@@ -87,7 +87,7 @@ jobs:
         uses: actions/github-script@v6
         with:
           script: |
-            const repo = await github.repos.get(context.repo);
+            const repo = await github.rest.repos.get(context.repo);
             return repo.data;
       - name: Set up QEMU
         id: qemu
