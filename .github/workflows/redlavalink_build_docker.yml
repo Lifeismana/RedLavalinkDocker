@@ -79,7 +79,7 @@ jobs:
                 build_prerelease:build_prerelease,
             }
       - name: Checkout
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
         with:
           path: docker-build
       - name: Repo metadata
