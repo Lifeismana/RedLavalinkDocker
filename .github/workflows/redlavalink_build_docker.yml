@@ -38,7 +38,7 @@ jobs:
     steps:
       - name: Find Jar Tag
         id: tags
-        uses: actions/github-script@v4
+        uses: actions/github-script@v6
         with:
           # *  This needs to be changed when changing repo ↓
           script: |
@@ -84,7 +84,7 @@ jobs:
           path: docker-build
       - name: Repo metadata
         id: repo
-        uses: actions/github-script@v4
+        uses: actions/github-script@v6
         with:
           script: |
             const repo = await github.repos.get(context.repo);
