@@ -55,7 +55,7 @@ runs:
           ${{ steps.prepare.outputs.tag_prerelease }} 
           ${{ steps.prepare.outputs.tag_release }}
         cache-from: |
-          ${{ env.GHCR_SLUG }}:${{inputs.tag}}
+          ${{ env.GHCR_SLUG }}:azul-${{inputs.tag}}
         labels: |
           maintainer=${{ github.repository_owner }}
           org.opencontainers.image.vendor=${{ github.repository_owner }}
@@ -76,6 +76,6 @@ runs:
       shell: bash
       run: |
         if [ ${{github.event_name != 'pull_request'}} ]; then
-          docker pull ${{ env.GHCR_SLUG }}:${{inputs.tag}}
-          docker image inspect ${{ env.GHCR_SLUG }}:${{inputs.tag}}
+          docker pull ${{ env.GHCR_SLUG }}:azul-${{inputs.tag}}
+          docker image inspect ${{ env.GHCR_SLUG }}:azul-${{inputs.tag}}
         fi
