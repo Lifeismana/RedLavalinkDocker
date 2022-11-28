@@ -70,7 +70,7 @@ runs:
       shell: bash
       run: |
         if [ ${{github.event_name != 'pull_request'}} ]; then
-          docker buildx imagetools inspect ${{ env.GHCR_SLUG }}:${{inputs.tag}}
+          docker buildx imagetools inspect ${{ env.GHCR_SLUG }}:azul-${{inputs.tag}}
         fi
     - name: Check pull
       shell: bash
