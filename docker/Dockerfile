@@ -18,7 +18,7 @@ COPY Lavalink.jar Lavalink.jar
 
 RUN chmod +x start.sh
 
-RUN groupadd -g 322 lavalink && useradd -r -u 322 -g lavalink lavalink
+RUN groupadd -g 322 lavalink && useradd -r -u 322 -g lavalink lavalink && chown lavalink:lavalink -R /Lavalink/
 
 USER lavalink
 
